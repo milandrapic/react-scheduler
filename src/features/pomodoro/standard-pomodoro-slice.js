@@ -23,7 +23,7 @@ const initialTimerState = {
     timeElapsed: 0,
     timerActive: false,
     chosenAlarm: 0,
-    timerType: 0,
+    timerType: 0, // 0 = work, 1 = short break, 2 = long break, 3 = custom work, 4 = custom break
     sid: 0,
     sessions: [], // these are the past sessions that the user has completed
     customSessions: [] // these are the future sessions that the user has set
@@ -64,9 +64,29 @@ export const standardPomoSlice = createSlice({
             state.seconds = state.duration - secsBetween;
         },
         newTimerReset: (state) => {
+            // add current values to session history
             if(state.timerType == 0){
+                
+                state.sessions.push({
+                    sid: state.numberOfWorkSessions,
+                    timeWorked: state.timeElapsed,
+                    targetTimeWorked: state.workTime * 60, // in seconds
+                    topic: state.topic
+                })
                 state.numberOfWorkSessions += 1;
             }
+
+            // check if there are any custom sessions
+            if(state.customSessions.length > 0){
+                const nextSession = state.customSessions.shift();
+                state.duration = nextSession.workTime * 60;
+                state.seconds = nextSession.workTime * 60;
+                state.timeElapsed = 0;
+                state.startTime = getLocalTime().toString();
+                state.topic = nextSession.topic;
+                state.timerActive = nextSession.;
+            }
+            
             const getNewTypeOfTimer = () => {
                 if(state.timerType == 0){
                     if((state.numberOfWorkSessions % state.sessionsUntilLongBreak) == 0){
