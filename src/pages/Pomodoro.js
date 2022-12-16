@@ -13,6 +13,7 @@ const Pomodoro = () => {
   const { isActive } = useSelector(state => state.pomoSettingsOverlay);
   const dispatch = useDispatch();
 
+  
 //   const getSessionDuration = (typeOfTimer) => {
 //     switch(typeOfTimer){
 //         case 0:
