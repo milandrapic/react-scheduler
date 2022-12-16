@@ -25,7 +25,8 @@ const initialTimerState = {
     chosenAlarm: 0,
     timerType: 0,
     sid: 0,
-    sessions: []
+    sessions: [], // these are the past sessions that the user has completed
+    customSessions: [] // these are the future sessions that the user has set
 }
 
 

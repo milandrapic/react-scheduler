@@ -33,8 +33,8 @@ const DefaultSettings = () => {
     }}>
     <div>
         <div className='defaultSettings-inputdiv' ><label className='defaultSettings-label' >Work</label><input maxLength={3} className='defaultSettings-input' ref={workT} defaultValue={workTime} pattern="^[1-9][0-9]*$" /></div>
-        <div className='defaultSettings-inputdiv' ><label className='defaultSettings-label' >Short Break</label><input maxLength={3} className='defaultSettings-input' ref={shortBreakT} defaultValue={10} pattern="^[1-9][0-9]*$" /></div>
-        <div className='defaultSettings-inputdiv' ><label className='defaultSettings-label' >Long Break</label><input maxLength={3} className='defaultSettings-input' ref={longBreakT} defaultValue={30} pattern="^[1-9][0-9]*$" /></div>
+        <div className='defaultSettings-inputdiv' ><label className='defaultSettings-label' >Short Break</label><input maxLength={3} className='defaultSettings-input' ref={shortBreakT} defaultValue={shortBreakTime} pattern="^[1-9][0-9]*$" /></div>
+        <div className='defaultSettings-inputdiv' ><label className='defaultSettings-label' >Long Break</label><input maxLength={3} className='defaultSettings-input' ref={longBreakT} defaultValue={longBreakTime} pattern="^[1-9][0-9]*$" /></div>
     </div>
     <div className='defaultSettings-timerInputs'>
                 <label className='defaultSettings-label' >Alarm Sound</label>
