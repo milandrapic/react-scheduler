@@ -17,47 +17,47 @@ const DefaultSettings = () => {
   return (
     <React.Fragment>
     <form onSubmit={(event) => {
-        event.preventDefault();
-        const action =  {
-            workTime: workT.current.value,
-            shortBreakTime: shortBreakT.current.value,
-            longBreakTime: longBreakT.current.value,
-            sessionsUntilLongBreak: numSessionsUntilLongBreak.current.value,
-            autoStartWork: autoStartW.current.checked,
-            autoStartBreaks: autoStartB.current.checked
-        };
-        console.log(action.payload, action.workTime * 60);
-        dispatch(standardPomoSlice.actions.submitDefaultSettings(action));
-        dispatch(pomoSettingsSlice.actions.toggleOverlay());
+            event.preventDefault();
+            const action =  {
+                workTime: workT.current.value,
+                shortBreakTime: shortBreakT.current.value,
+                longBreakTime: longBreakT.current.value,
+                sessionsUntilLongBreak: numSessionsUntilLongBreak.current.value,
+                autoStartWork: autoStartW.current.checked,
+                autoStartBreaks: autoStartB.current.checked
+            };
+            console.log(action.payload, action.workTime * 60);
+            dispatch(standardPomoSlice.actions.submitDefaultSettings(action));
+            dispatch(pomoSettingsSlice.actions.toggleOverlay());
 
-    }}>
-    <div>
-        <div className='defaultSettings-inputdiv' ><label className='defaultSettings-label' >Work</label><input maxLength={3} className='defaultSettings-input' ref={workT} defaultValue={workTime} pattern="^[1-9][0-9]*$" /></div>
-        <div className='defaultSettings-inputdiv' ><label className='defaultSettings-label' >Short Break</label><input maxLength={3} className='defaultSettings-input' ref={shortBreakT} defaultValue={shortBreakTime} pattern="^[1-9][0-9]*$" /></div>
-        <div className='defaultSettings-inputdiv' ><label className='defaultSettings-label' >Long Break</label><input maxLength={3} className='defaultSettings-input' ref={longBreakT} defaultValue={longBreakTime} pattern="^[1-9][0-9]*$" /></div>
-    </div>
-    <div className='defaultSettings-timerInputs'>
-                <label className='defaultSettings-label' >Alarm Sound</label>
-                <select>
-                <option value={0} onClick={() => {
-                    playAudio("alarm", 0);
-                    dispatch(standardPomoSlice.actions.setChosenAlarm({chosenAlarm: 0}));
-                }}>1</option>
-                <option value={1} onClick={() => {
-                    playAudio("alarm", 1);
-                    dispatch(standardPomoSlice.actions.setChosenAlarm({chosenAlarm: 1}));
-                }}>2</option>
-                <option value={2} onClick={() => {
-                    playAudio("alarm", 2);
-                    dispatch(standardPomoSlice.actions.setChosenAlarm({chosenAlarm: 2}));
-                }}>3</option>
-                <option value={3} onClick={() => {
-                    playAudio("alarm", 3);
-                    dispatch(standardPomoSlice.actions.setChosenAlarm({chosenAlarm: 3}));
-                }}>4</option>
-                </select>
-            </div>
-            <hr></hr>
+        }}>
+        <div>
+            <div className='defaultSettings-inputdiv' ><label className='defaultSettings-label' >Work</label><input maxLength={3} className='defaultSettings-input' ref={workT} defaultValue={workTime} pattern="^[1-9][0-9]*$" /></div>
+            <div className='defaultSettings-inputdiv' ><label className='defaultSettings-label' >Short Break</label><input maxLength={3} className='defaultSettings-input' ref={shortBreakT} defaultValue={shortBreakTime} pattern="^[1-9][0-9]*$" /></div>
+            <div className='defaultSettings-inputdiv' ><label className='defaultSettings-label' >Long Break</label><input maxLength={3} className='defaultSettings-input' ref={longBreakT} defaultValue={longBreakTime} pattern="^[1-9][0-9]*$" /></div>
+        </div>
+        <div className='defaultSettings-timerInputs'>
+                    <label className='defaultSettings-label' >Alarm Sound</label>
+                    <select>
+                    <option value={0} onClick={() => {
+                        playAudio("alarm", 0);
+                        dispatch(standardPomoSlice.actions.setChosenAlarm({chosenAlarm: 0}));
+                    }}>1</option>
+                    <option value={1} onClick={() => {
+                        playAudio("alarm", 1);
+                        dispatch(standardPomoSlice.actions.setChosenAlarm({chosenAlarm: 1}));
+                    }}>2</option>
+                    <option value={2} onClick={() => {
+                        playAudio("alarm", 2);
+                        dispatch(standardPomoSlice.actions.setChosenAlarm({chosenAlarm: 2}));
+                    }}>3</option>
+                    <option value={3} onClick={() => {
+                        playAudio("alarm", 3);
+                        dispatch(standardPomoSlice.actions.setChosenAlarm({chosenAlarm: 3}));
+                    }}>4</option>
+                    </select>
+        </div>
+        <hr></hr>
         <div className='defaultSettings-timerInputs'>
             <label className='defaultSettings-label' >Intervals Until Long Break</label>
             <input
@@ -87,7 +87,7 @@ const DefaultSettings = () => {
                 />
             </div>
             <hr></hr>
-        <button type='submit'>OK</button>
+            <button type='submit'>OK</button>
     </form>
     </React.Fragment>
   )

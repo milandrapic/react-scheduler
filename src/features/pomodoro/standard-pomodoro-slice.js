@@ -1,6 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getLocalTime, getLocalTimeAfterSeconds, getSecondsBetweenTimes } from '../../utils/TimeHelper';
-
+const mockCustomSessionList = [{
+    workTime: 1,
+    breakTime: 2,
+    autoStartWork: true,
+    autoStartBreaks: true,
+    topic: 'test1',
+},
+{
+    workTime: 3,
+    breakTime: 4,
+    autoStartWork: false,
+    autoStartBreaks: true,
+    topic: 'test2',
+},
+{
+    workTime: 5,
+    breakTime: 6,
+    autoStartWork: true,
+    autoStartBreaks: false,
+    topic: 'test3',
+}]
 const workTime = 0.1;
 const initialTimerState = {
     startTime: getLocalTime().toString(),
@@ -26,7 +46,8 @@ const initialTimerState = {
     timerType: 0, // 0 = work, 1 = short break, 2 = long break, 3 = custom work, 4 = custom break
     sid: 0,
     sessions: [], // these are the past sessions that the user has completed
-    customSessions: [] // these are the future sessions that the user has set
+    currentCustomSession: {},
+    customSessions: [...mockCustomSessionList] // these are the future sessions that the user has set
 }
 
 
@@ -59,32 +80,52 @@ export const standardPomoSlice = createSlice({
         },
         updateTimeElapsed: (state) => {
             const secsBetween = getSecondsBetweenTimes(new Date(state.startTime), getLocalTime());
-            console.log(secsBetween);
+            // console.log(secsBetween);
+            // console.log(state.sessions);
             state.timeElapsed = secsBetween;
             state.seconds = state.duration - secsBetween;
         },
         newTimerReset: (state) => {
             // add current values to session history
-            if(state.timerType == 0){
+            if(state.timerType == 0 || state.timerType == 3){
                 
-                state.sessions.push({
+                state.sessions = [...state.sessions,{
                     sid: state.numberOfWorkSessions,
                     timeWorked: state.timeElapsed,
-                    targetTimeWorked: state.workTime * 60, // in seconds
+                    targetTimeWorked: (state.timerType == 0 ? state.workTime : state.currentCustomSession.workTime) * 60, // in seconds
                     topic: state.topic
-                })
+                }]
                 state.numberOfWorkSessions += 1;
+                // console.log(state.sessions);
             }
 
             // check if there are any custom sessions
-            if(state.customSessions.length > 0){
-                const nextSession = state.customSessions.shift();
-                state.duration = nextSession.workTime * 60;
-                state.seconds = nextSession.workTime * 60;
-                state.timeElapsed = 0;
-                state.startTime = getLocalTime().toString();
-                state.topic = nextSession.topic;
-                state.timerActive = nextSession.;
+            if(state.customSessions.length > 0 || (state.customSessions.length == 0 && state.timerType == 3)){
+                if(!(state.timerType == 0 || state.timerType == 3)){
+                    const nextSession = state.customSessions.shift();
+                    state.currentCustomSession = nextSession;
+                    state.duration = nextSession.workTime * 60;
+                    state.seconds = nextSession.workTime * 60;
+                    state.timeElapsed = 0;
+                    state.startTime = getLocalTime().toString();
+                    state.topic = nextSession.topic;
+                    state.timerActive = nextSession.autoStartWork;
+                    state.timerType = 3;
+                    return;
+                }
+                else if ((state.customSessions.length == 0 && state.timerType == 3)){
+                    state.topic = '';
+                }
+                else if (state.timerType == 3){
+                    state.duration = state.currentCustomSession.breakTime * 60;
+                    state.seconds = state.currentCustomSession.breakTime * 60;
+                    state.startTime = getLocalTime().toString();
+                    state.timeElapsed = 0;
+                    state.timerActive = state.currentCustomSession.autoStartBreaks;
+                    state.timerType = 4;
+                    return;
+                }
+                
             }
             
             const getNewTypeOfTimer = () => {
@@ -131,8 +172,8 @@ export const standardPomoSlice = createSlice({
         submitDefaultSettings: (state, action) => {
             const d = action.payload.workTime * 60;
             const secs = d - state.timeElapsed;
-            console.log(action)
-            console.log(secs, "secs", action.payload.workTime, "workTime");
+            // console.log(action)
+            // console.log(secs, "secs", action.payload.workTime, "workTime");
             state.duration = d;
             state.seconds = secs;
             state.workTime = action.payload.workTime;

@@ -5,15 +5,16 @@ import { standardPomoSlice } from '../features/pomodoro/standard-pomodoro-slice'
 import { playAudio } from '../utils/AlarmHelper';
 import { pomoSettingsSlice } from '../features/pomodoro/pomodoro-settings-overlay';
 import PomodoroSettings from '../components/PomodoroSettings/PomodoroSettings';
+import PastSession from '../components/PastSession/PastSession';
 
 let initialLoad = true;
 
 const Pomodoro = () => {
-  const { timeElapsed, workTime, longBreakTime, shortBreakTime, startTime, timerActive, seconds, chosenAlarm, timerType } = useSelector(state => state.standardPomo);
+  const { timeElapsed, topic, startTime, timerActive, seconds, chosenAlarm, timerType, sessions } = useSelector(state => state.standardPomo);
   const { isActive } = useSelector(state => state.pomoSettingsOverlay);
   const dispatch = useDispatch();
 
-  
+
 //   const getSessionDuration = (typeOfTimer) => {
 //     switch(typeOfTimer){
 //         case 0:
@@ -25,7 +26,7 @@ const Pomodoro = () => {
 //     }
 //   }
 
-  console.log(getSecondsBetweenTimes(new Date(startTime), new Date()));
+  // console.log(getSecondsBetweenTimes(new Date(startTime), new Date()));
 
   const endSession = () => {
     playAudio("alarm", chosenAlarm);
@@ -33,8 +34,8 @@ const Pomodoro = () => {
   }
   
   useEffect(() => {
-    console.log("in useEffect");
-    console.log(timeElapsed, seconds, initialLoad)
+    // console.log("in useEffect");
+    // console.log(timeElapsed, seconds, initialLoad)
     if(initialLoad){
         if(timerActive){
             dispatch(standardPomoSlice.actions.updateTimeElapsed());
@@ -42,7 +43,7 @@ const Pomodoro = () => {
         initialLoad = false;
     }
     return () => {
-        console.log("in Cleanup", initialLoad);
+        // console.log("in Cleanup", initialLoad);
         initialLoad = true;
     };
   }, [initialLoad, dispatch, seconds, timeElapsed, timerActive]);
@@ -72,18 +73,24 @@ const Pomodoro = () => {
 
   const minutes = Math.floor(seconds/60);
   const s = seconds % 60;
+  const sessionTitle = {
+    0: "Pomodoro",
+    1: "Short Break",
+    2: "Long Break",
+    3: "Pomodoro",
+    4: "Break"
+  };
+  const pastSessions = sessions.map(session => <PastSession key={session.sid} session={session} />);
   return (
     <div className="page-Pomodoro">
 
      <button onClick={()=>{
-      console.log("hello");
       dispatch(pomoSettingsSlice.actions.toggleOverlay());
-      console.log(isActive);
      }}>Settings</button>
 
      <PomodoroSettings />
 
-     <h4>{timerType==0?"Pomodoro":"Break"}</h4>
+     <h4>{sessionTitle[timerType]}</h4>
      <h2>{minutes}:{s<10?'0':''}{s}</h2>
      <button onClick={() => {
         if (!timerActive){
@@ -106,6 +113,8 @@ const Pomodoro = () => {
             endSession();
         }
      }>Skip</button>
+     {topic!=''?<div><h4 style={{ textDecoration: 'underline' }}>Topic</h4><label>{topic}</label></div>:null}
+    {pastSessions}
     </div>
   );
 }
