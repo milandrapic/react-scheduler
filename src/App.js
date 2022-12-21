@@ -2,7 +2,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import './App.css';
 import Nav from './components/Nav/Nav';
-import Pomodoro from './pages/Pomodoro';
+import Pomodoro from './pages/Pomodoro/Pomodoro';
 
 
 

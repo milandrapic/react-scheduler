@@ -1,26 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getLocalTime, getLocalTimeAfterSeconds, getSecondsBetweenTimes } from '../../utils/TimeHelper';
-const mockCustomSessionList = [{
-    workTime: 1,
-    breakTime: 2,
-    autoStartWork: true,
-    autoStartBreaks: true,
-    topic: 'test1',
-},
-{
-    workTime: 3,
-    breakTime: 4,
-    autoStartWork: false,
-    autoStartBreaks: true,
-    topic: 'test2',
-},
-{
-    workTime: 5,
-    breakTime: 6,
-    autoStartWork: true,
-    autoStartBreaks: false,
-    topic: 'test3',
-}]
+
 const workTime = 0.1;
 const initialTimerState = {
     startTime: getLocalTime().toString(),
@@ -47,7 +27,7 @@ const initialTimerState = {
     sid: 0,
     sessions: [], // these are the past sessions that the user has completed
     currentCustomSession: {},
-    customSessions: [...mockCustomSessionList] // these are the future sessions that the user has set
+    customSessions: [] // these are the future sessions that the user has set
 }
 
 
@@ -184,6 +164,9 @@ export const standardPomoSlice = createSlice({
             state.autoStartWork = action.payload.autoStartWork;
             state.topic = action.payload.topic;
             state.chosenAlarm = action.payload.chosenAlarm;
+        },
+        setSessions: (state, action) => {
+            state.customSessions = action.payload.sessions;
         }
 
     }

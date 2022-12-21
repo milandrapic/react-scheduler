@@ -1,4 +1,7 @@
 import React, { useRef, useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { pomoSettingsSlice } from '../../../features/pomodoro/pomodoro-settings-overlay';
+import { standardPomoSlice } from '../../../features/pomodoro/standard-pomodoro-slice';
 import AddedCustomSession from './AddedCustomSession/AddedCustomSession';
 
 
@@ -9,6 +12,7 @@ const CustomSettings = () => {
   const topic = useRef();
   const autoStartWork = useRef();
   const autoStartBreaks = useRef();
+  const dispatch = useDispatch();
 
   const addTopic = (event) => {
     event.preventDefault();
@@ -22,11 +26,20 @@ const CustomSettings = () => {
     setSessions((sessions) => [...sessions, newSession]);
     console.log(sessions);
   }
+
+  const deleteSession = (index) => {
+    setSessions(sessions.filter((session, i) => i !== index));
+  }
   
-  const addedSessions = sessions.map((session, index) => <AddedCustomSession key={index} index={index} session={session} />)
+  const addedSessions = sessions.map((session, index) => <AddedCustomSession key={index} index={index} session={session} deleteSession={deleteSession} />);
+  const onSubmitCustomSessions = (event) => {
+    event.preventDefault();
+    dispatch(standardPomoSlice.actions.setSessions({sessions: sessions}));
+    dispatch(pomoSettingsSlice.actions.toggleOverlay());
+  }
   return (
     <React.Fragment>
-      <form>
+      <form onSubmit={onSubmitCustomSessions}>
       <div className='defaultSettings-inputdiv' ><label className='defaultSettings-label' >Work</label><input maxLength={3} className='defaultSettings-input' ref={workT} defaultValue={50} pattern="^[1-9][0-9]*$" /></div>
       <div className='defaultSettings-inputdiv' ><label className='defaultSettings-label' >Break</label><input maxLength={3} className='defaultSettings-input' ref={breakT} defaultValue={10} pattern="^[1-9][0-9]*$" /></div>
       <div className='defaultSettings-inputdiv' ><label className='defaultSettings-label' >Topic</label><input className='defaultSettings-input' ref={topic} /></div>
@@ -45,20 +58,20 @@ const CustomSettings = () => {
             ref={autoStartBreaks}
           />
       </div>
-      <div className='defaultSettings-timerInputs'>
+      {/* <div className='defaultSettings-timerInputs'>
           <label className='defaultSettings-label'>How to Start Custom Sessions?</label>
           <select>
             <option value={1}>Add Sessions to Queue</option>
             <option value={0}>Start Session Automatically</option>
           </select>
-      </div>
-      <hr></hr>
-      {addedSessions}
-      <hr></hr>
+      </div> */}
       <button onClick={addTopic}>Add Session</button>
       <br></br>
-      <button type='submit'>OK</button>
       <hr></hr>
+      {/* <label>Custom Sessions</label> <br></br> */}
+      {addedSessions}
+      <hr></hr> 
+      <button type='submit'>OK</button>
       </form>
     </React.Fragment>
   )
