@@ -1,18 +1,28 @@
-import React, { useRef, useState } from 'react'
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { pomoSettingsSlice } from '../../../features/pomodoro/pomodoro-settings-overlay';
 import { standardPomoSlice } from '../../../features/pomodoro/standard-pomodoro-slice';
 import AddedCustomSession from './AddedCustomSession/AddedCustomSession';
 
 
-const CustomSettings = () => {
+
+const CustomSettings = (props) => {
+  let initialLoad = true;
   const [sessions, setSessions] = useState([])
+  const { customSessions } = useSelector(state => state.standardPomo);
   const workT = useRef();
   const breakT = useRef();
   const topic = useRef();
   const autoStartWork = useRef();
   const autoStartBreaks = useRef();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if(initialLoad){
+      setSessions(customSessions);
+      initialLoad = false;
+    }
+  }, [customSessions])
 
   const addTopic = (event) => {
     event.preventDefault();

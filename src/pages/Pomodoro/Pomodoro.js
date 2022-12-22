@@ -8,6 +8,7 @@ import PomodoroSettings from '../../components/PomodoroSettings/PomodoroSettings
 import PastSession from '../../components/PastSession/PastSession';
 import './Pomodoro.css';
 import AddedCustomSession from '../../components/PomodoroSettings/CustomSettings/AddedCustomSession/AddedCustomSession';
+import QueuePreview from '../../components/QueuePreview/QueuePreview';
 
 let initialLoad = true;
 
@@ -17,6 +18,8 @@ const Pomodoro = () => {
   const dispatch = useDispatch();
   const [hoverQueue, setHoverQueue] = useState(false);
   const [scrollQueue, setScrollQueue] = useState(0);
+  const [hoverSessions, setHoverSessions] = useState(false);
+  const [scrollSessions, setScrollSessions] = useState(0);
 
 //   const getSessionDuration = (typeOfTimer) => {
 //     switch(typeOfTimer){
@@ -83,14 +86,17 @@ const Pomodoro = () => {
     3: "Pomodoro",
     4: "Break"
   };
-  const pastSessions = sessions.map(session => <PastSession key={session.sid} session={session} />);
-  const queueScroller = (event) => {
+  // const pastSessions = sessions.map(session => <PastSession key={session.sid} session={session} />);
+  const queueScroller = () => {
     setScrollQueue(scrollQueue => scrollQueue + 1);
   }
   const q = customSessions.length>0?scrollQueue%customSessions.length:0;
-  const pageDots = customSessions.map((session, index) => {
-    return index === q?<span key={index} style={{fontWeight:"bold", fontSize:"20px"}}>.</span>:<span key={index}>.</span>
-  });
+  const sNum = sessions.length>0?scrollSessions%sessions.length:0;
+  
+
+  const sessionsScroller = () => {
+    setScrollSessions(scrollSessions => scrollSessions + 1);
+  }
 
   return (
     <div className="page-Pomodoro">
@@ -100,7 +106,6 @@ const Pomodoro = () => {
      }}>Settings</button>
 
      <div className={customSessions.length > 0?'pomodoro-queue':'pomodoro-inactiveDiv'} onMouseOver={() => {
-        console.log("in")
         if(customSessions.length > 0){
           setHoverQueue(true);
         }
@@ -109,16 +114,19 @@ const Pomodoro = () => {
      >
       <label >Queue:</label> <p style={{display: 'inline'}}>{customSessions.length}</p>
      </div>
-     <div className={hoverQueue?'pomodoro-activeQueue':'pomodoro-inactiveDiv'}>
-     <div>
-            <p>Topic: {customSessions.length>0?customSessions[q].topic:""}</p>
-            <p>Work Time: {customSessions.length>0?customSessions[q].workTime:""}</p>
-            <p>Break Time: {customSessions.length>0?customSessions[q].breakTime:""}</p>
-            <p>Auto Start Work: {customSessions.length>0?customSessions[q].autoStartWork ? 'Yes' : 'No':""}</p>
-            <p>Auto Start Breaks: {customSessions.length>0?customSessions[q].autoStartBreaks ? 'Yes' : 'No':""}</p>
-            <span>{pageDots}</span>
-    </div>
+     <QueuePreview q={q} hoverQueue={hoverQueue} />
+
+     <div className={sessions.length > 0?'pomodoro-sessionHistory':'pomodoro-inactiveDiv'} onMouseOver={() => {
+        if(sessions.length > 0){
+          console.log("hovering");
+          setHoverSessions(true);
+        }
+     }} onMouseOut={() => setHoverSessions(false)}
+     onClick={() => sessionsScroller()}
+     >
+      <label >Sessions:</label> <p style={{display: 'inline'}}>{sessions.length}</p>
      </div>
+     <PastSession sNum={sNum} hoverSession={hoverSessions} />
 
      <PomodoroSettings />
 
@@ -147,7 +155,7 @@ const Pomodoro = () => {
      }>Skip</button>
      {topic!=''?<div><h4 style={{ textDecoration: 'underline' }}>Topic</h4><label>{topic}</label></div>:null}
     <hr></hr>
-    {pastSessions}
+    {/* {pastSessions} */}
     </div>
   );
 }
