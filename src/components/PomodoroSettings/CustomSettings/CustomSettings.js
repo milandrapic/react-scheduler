@@ -34,7 +34,6 @@ const CustomSettings = (props) => {
       autoStartBreaks: autoStartBreaks.current.checked
     };
     setSessions((sessions) => [...sessions, newSession]);
-    console.log(sessions);
   }
 
   const deleteSession = (index) => {
@@ -46,6 +45,7 @@ const CustomSettings = (props) => {
     event.preventDefault();
     dispatch(standardPomoSlice.actions.setSessions({sessions: sessions}));
     dispatch(pomoSettingsSlice.actions.toggleOverlay());
+    
   }
   return (
     <React.Fragment>

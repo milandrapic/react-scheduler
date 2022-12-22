@@ -1,6 +1,6 @@
 .sessionPreview-sessionHover{
     position: fixed;
-    top: 139px;
+    top: 145px;
     z-index: 100;
     overflow: hidden;
     border: 2px solid black;

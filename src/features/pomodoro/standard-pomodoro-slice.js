@@ -167,6 +167,9 @@ export const standardPomoSlice = createSlice({
         },
         setSessions: (state, action) => {
             state.customSessions = action.payload.sessions;
+            if(action.payload.sessions.length > 0){
+                state.autoStartWork = false;
+            }
         }
 
     }
