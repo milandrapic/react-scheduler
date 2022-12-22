@@ -109,7 +109,10 @@ const Pomodoro = () => {
         if(customSessions.length > 0){
           setHoverQueue(true);
         }
-     }} onMouseOut={() => setHoverQueue(false)}
+     }} onMouseOut={() => {
+      setHoverQueue(false);
+      setScrollQueue(0); 
+    }}
      >
       <label >Queue:</label> <p style={{display: 'inline'}}>{customSessions.length}</p>
       <button onClick={() => queueScroller()} className={'pomodoro-hoverButton'}>+</button>
@@ -120,7 +123,10 @@ const Pomodoro = () => {
         if(sessions.length > 0){
           setHoverSessions(true);
         }
-     }} onMouseOut={() => setHoverSessions(false)}
+     }} onMouseOut={() => {
+      setHoverSessions(false);
+      setScrollSessions(0);
+    }}
      >
       <label >Sessions:</label> <p style={{display: 'inline'}}>{sessions.length}</p>
       <button onClick={() => sessionsScroller()} className={'pomodoro-hoverButton'}>+</button>

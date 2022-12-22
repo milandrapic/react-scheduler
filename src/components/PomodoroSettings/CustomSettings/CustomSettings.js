@@ -15,6 +15,8 @@ const CustomSettings = (props) => {
   const topic = useRef();
   const autoStartWork = useRef();
   const autoStartBreaks = useRef();
+  const startSessionsInstantly = useRef();
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -41,9 +43,10 @@ const CustomSettings = (props) => {
   }
   
   const addedSessions = sessions.map((session, index) => <AddedCustomSession key={index} index={index} session={session} deleteSession={deleteSession} />);
+  
   const onSubmitCustomSessions = (event) => {
     event.preventDefault();
-    dispatch(standardPomoSlice.actions.setSessions({sessions: sessions}));
+    dispatch(standardPomoSlice.actions.setSessions({sessions: sessions, startNow: startSessionsInstantly.current.checked}));
     dispatch(pomoSettingsSlice.actions.toggleOverlay());
     
   }
@@ -66,6 +69,13 @@ const CustomSettings = (props) => {
             type="checkbox"
             defaultChecked={false}
             ref={autoStartBreaks}
+          />
+          <br></br>
+          <label>Start Sessions Instantly</label>
+          <input
+            type="checkbox"
+            defaultChecked={false}
+            ref={startSessionsInstantly}
           />
       </div>
       {/* <div className='defaultSettings-timerInputs'>

@@ -170,6 +170,18 @@ export const standardPomoSlice = createSlice({
             if(action.payload.sessions.length > 0){
                 state.autoStartWork = false;
             }
+            else return;
+            if(action.payload.startNow){
+                const nextSession = state.customSessions.shift();
+                state.currentCustomSession = nextSession;
+                state.duration = nextSession.workTime * 60;
+                state.seconds = nextSession.workTime * 60;
+                state.timeElapsed = 0;
+                state.startTime = getLocalTime().toString();
+                state.topic = nextSession.topic;
+                state.timerActive = nextSession.autoStartWork;
+                state.timerType = 3;
+            }
         }
 
     }
