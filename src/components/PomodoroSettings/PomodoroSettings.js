@@ -16,8 +16,8 @@ const Backdrop = () => {
 const Overlay = () => {
     const { isActive, isCustom } = useSelector(state => state.pomoSettingsOverlay);
     const dispatch = useDispatch()
-    return (
-        <div className={isActive?"pomosettings-div":"pomosettings-inactiveDiv"}>
+    return isActive?(
+        <div className={"pomosettings-div"}>
             <button onClick={()=>{
                 dispatch(pomoSettingsSlice.actions.toggleCustom());
             }}>{isCustom?"Standard":"Custom"}</button>
@@ -26,7 +26,7 @@ const Overlay = () => {
                 dispatch(pomoSettingsSlice.actions.toggleOverlay());
             }}>Close</button>
         </div>
-    )
+    ):null
 }
 
 const PomodoroSettings = () => {

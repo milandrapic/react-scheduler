@@ -23,9 +23,11 @@ const initialTimerState = {
     timeElapsed: 0,
     timerActive: false,
     chosenAlarm: 0,
-    timerType: 0,
+    timerType: 0, // 0 = work, 1 = short break, 2 = long break, 3 = custom work, 4 = custom break
     sid: 0,
-    sessions: []
+    sessions: [], // these are the past sessions that the user has completed
+    currentCustomSession: {},
+    customSessions: [] // these are the future sessions that the user has set
 }
 
 
@@ -58,14 +60,54 @@ export const standardPomoSlice = createSlice({
         },
         updateTimeElapsed: (state) => {
             const secsBetween = getSecondsBetweenTimes(new Date(state.startTime), getLocalTime());
-            console.log(secsBetween);
+            // console.log(secsBetween);
+            // console.log(state.sessions);
             state.timeElapsed = secsBetween;
             state.seconds = state.duration - secsBetween;
         },
         newTimerReset: (state) => {
-            if(state.timerType == 0){
+            // add current values to session history
+            if(state.timerType == 0 || state.timerType == 3){
+                
+                state.sessions = [...state.sessions,{
+                    sid: state.numberOfWorkSessions,
+                    timeWorked: state.timeElapsed,
+                    targetTimeWorked: (state.timerType == 0 ? state.workTime : state.currentCustomSession.workTime) * 60, // in seconds
+                    topic: state.topic
+                }]
                 state.numberOfWorkSessions += 1;
+                // console.log(state.sessions);
             }
+
+            // check if there are any custom sessions
+            if(state.customSessions.length > 0 || (state.customSessions.length == 0 && state.timerType == 3)){
+                if(!(state.timerType == 0 || state.timerType == 3)){
+                    const nextSession = state.customSessions.shift();
+                    state.currentCustomSession = nextSession;
+                    state.duration = nextSession.workTime * 60;
+                    state.seconds = nextSession.workTime * 60;
+                    state.timeElapsed = 0;
+                    state.startTime = getLocalTime().toString();
+                    state.topic = nextSession.topic;
+                    state.timerActive = nextSession.autoStartWork;
+                    state.timerType = 3;
+                    return;
+                }
+                else if ((state.customSessions.length == 0 && state.timerType == 3)){
+                    state.topic = '';
+                }
+                else if (state.timerType == 3){
+                    state.duration = state.currentCustomSession.breakTime * 60;
+                    state.seconds = state.currentCustomSession.breakTime * 60;
+                    state.startTime = getLocalTime().toString();
+                    state.timeElapsed = 0;
+                    state.timerActive = state.currentCustomSession.autoStartBreaks;
+                    state.timerType = 4;
+                    return;
+                }
+                
+            }
+            
             const getNewTypeOfTimer = () => {
                 if(state.timerType == 0){
                     if((state.numberOfWorkSessions % state.sessionsUntilLongBreak) == 0){
@@ -110,8 +152,8 @@ export const standardPomoSlice = createSlice({
         submitDefaultSettings: (state, action) => {
             const d = action.payload.workTime * 60;
             const secs = d - state.timeElapsed;
-            console.log(action)
-            console.log(secs, "secs", action.payload.workTime, "workTime");
+            // console.log(action)
+            // console.log(secs, "secs", action.payload.workTime, "workTime");
             state.duration = d;
             state.seconds = secs;
             state.workTime = action.payload.workTime;
@@ -122,6 +164,24 @@ export const standardPomoSlice = createSlice({
             state.autoStartWork = action.payload.autoStartWork;
             state.topic = action.payload.topic;
             state.chosenAlarm = action.payload.chosenAlarm;
+        },
+        setSessions: (state, action) => {
+            state.customSessions = action.payload.sessions;
+            if(action.payload.sessions.length > 0){
+                state.autoStartWork = false;
+            }
+            else return;
+            if(action.payload.startNow){
+                const nextSession = state.customSessions.shift();
+                state.currentCustomSession = nextSession;
+                state.duration = nextSession.workTime * 60;
+                state.seconds = nextSession.workTime * 60;
+                state.timeElapsed = 0;
+                state.startTime = getLocalTime().toString();
+                state.topic = nextSession.topic;
+                state.timerActive = nextSession.autoStartWork;
+                state.timerType = 3;
+            }
         }
 
     }
