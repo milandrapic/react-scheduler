@@ -40,8 +40,6 @@ const Pomodoro = () => {
   }
   
   useEffect(() => {
-    // console.log("in useEffect");
-    // console.log(timeElapsed, seconds, initialLoad)
     if(initialLoad){
         if(timerActive){
             dispatch(standardPomoSlice.actions.updateTimeElapsed());
@@ -49,7 +47,6 @@ const Pomodoro = () => {
         initialLoad = false;
     }
     return () => {
-        // console.log("in Cleanup", initialLoad);
         initialLoad = true;
     };
   }, [initialLoad, dispatch, seconds, timeElapsed, timerActive]);
@@ -58,7 +55,6 @@ const Pomodoro = () => {
     const timer = setInterval(() => {
       if(timerActive){
       const passed = Math.floor((getLocalTime() - new Date(startTime)) / 1000);
-    //   console.log(passed)
         if (seconds <= 0) {
             // sound alarm
             endSession();
@@ -86,7 +82,6 @@ const Pomodoro = () => {
     3: "Pomodoro",
     4: "Break"
   };
-  // const pastSessions = sessions.map(session => <PastSession key={session.sid} session={session} />);
   const queueScroller = () => {
     setScrollQueue(scrollQueue => scrollQueue + 1);
   }
@@ -99,9 +94,11 @@ const Pomodoro = () => {
   }
 
   return (
-    <div className="page-Pomodoro">
+    <div className="pomodoro">
 
-     <button onClick={()=>{
+     <button 
+     className='pomodoro-settingsButton'
+     onClick={()=>{
       dispatch(pomoSettingsSlice.actions.toggleOverlay());
      }}>Settings</button>
 
@@ -136,10 +133,12 @@ const Pomodoro = () => {
      <PastSession sNum={sNum} hoverSession={hoverSessions} />
 
      <PomodoroSettings />
-
-     <h4>{sessionTitle[timerType]}</h4>
-     <h2>{minutes}:{s<10?'0':''}{s}</h2>
-     <button onClick={() => {
+    <div className='pomodoro-timer'>
+     <h4 className='pomodoro-timeHeader'>{sessionTitle[timerType]}</h4>
+     <h2 className='pomodoro-time'>{minutes}:{s<10?'0':''}{s}</h2>
+     <button 
+     className='pomodoro-button'
+     onClick={() => {
         if (!timerActive){
             playAudio("start");
             dispatch(standardPomoSlice.actions.shiftTimes());
@@ -151,18 +150,22 @@ const Pomodoro = () => {
         
       }
      }>{timerActive?"Stop":"Start"}</button>
-     <button onClick={ () => {
+     <button 
+     className='pomodoro-button'
+     onClick={ () => {
         playAudio("clear");
         dispatch(standardPomoSlice.actions.resetTimer());
      }} >Reset</button>
-     <button onClick={
+     <button 
+     className='pomodoro-button'
+     onClick={
         () => {
             endSession();
         }
      }>Skip</button>
+
      {topic!=''?<div><h4 style={{ textDecoration: 'underline' }}>Topic</h4><label>{topic}</label></div>:null}
-    <hr></hr>
-    {/* {pastSessions} */}
+    </div>
     </div>
   );
 }

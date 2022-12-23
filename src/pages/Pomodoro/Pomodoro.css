@@ -88,3 +88,62 @@
     border: 1px solid black;
 
 }
+.pomodoro{
+    margin-top: 20px;
+}
+
+
+.pomodoro-timer{
+    padding-top: 20px;
+    border: 2px solid rgb(2, 44, 40);
+    width:400px;
+    height: 250px;
+    margin: 0 auto;
+    margin-top: 20px;
+    border-radius: 30px;
+    background-color: #cad8d9;
+    /* font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; */
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: rgb(22, 3, 85);
+}
+
+.pomodoro-time{
+    border: 2px solid transparent;
+    padding-top: 15px;
+    padding-bottom: 0px;
+    width: 150px;
+    height: 50px;
+    margin: 0 auto;
+    margin-top: 0px;
+    top: 0px;
+    border-radius: 10px;
+    background-color: #ede6ed;
+}
+.pomodoro-timeHeader{
+
+    margin-top: 0px;
+}
+
+.pomodoro-button{
+    margin-left: 2.5px;
+    margin-right: 2.5px;
+    margin-top: 10px;
+    width: 45px;
+    font-family: Arial;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background-color: #ede6ed;
+    height: 25px;
+}
+.pomodoro-settingsButton{
+    left: 400px;
+    /* margin-right: 2.5px; */
+    border: 1px solid rgb(1, 63, 49);
+    border-radius: 20px;
+    background-color: #cad8d9;
+    /* background-color: aqua; */
+    height: 25px;
+    width: 70px;
+    font-family: Arial;
+    
+}
