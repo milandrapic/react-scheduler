@@ -127,7 +127,6 @@ const Pomodoro = () => {
      }} 
      onMouseLeave={() => {
       setHoverSessions(false);
-      console.log("out");
       setScrollSessions(0);
     }}
      >
