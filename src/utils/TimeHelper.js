@@ -31,3 +31,18 @@ export const getLocalTimeAfterSeconds = (seconds) => {
 export const getSecondsBetweenTimes = (time1, time2) => {
     return Math.floor((time2 - time1)/1000);
 }
+
+export const getMinutesFromSeconds = (seconds) => {
+    return Math.floor(seconds/60);
+}
+
+export const getMinutesAndSecondsFromSeconds = (s) => {
+    if (s === undefined) return {minutes: 0, seconds: 0};
+    const minutes = Math.floor(s/60);
+    const seconds = s % 60;
+    return {minutes, seconds};
+}
+
+export const formatMinutesAndSeconds = (minutes=0, seconds=0) => {
+    return `${minutes<10?"0":""}${minutes}:${seconds<10?"0":""}${seconds}`;
+}
