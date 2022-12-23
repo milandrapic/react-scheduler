@@ -109,7 +109,7 @@ const Pomodoro = () => {
         if(customSessions.length > 0){
           setHoverQueue(true);
         }
-     }} onMouseOut={() => {
+     }} onMouseLeave={() => {
       setHoverQueue(false);
       setScrollQueue(0); 
     }}
@@ -119,11 +119,13 @@ const Pomodoro = () => {
      </div>
      <QueuePreview q={q} hoverQueue={hoverQueue} />
 
-     <div className={sessions.length > 0?'pomodoro-sessionHistory':'pomodoro-inactiveDiv'} onMouseOver={() => {
+     <div className={sessions.length > 0?'pomodoro-sessionHistory':'pomodoro-inactiveDiv'} 
+     onMouseOver={() => {
         if(sessions.length > 0){
           setHoverSessions(true);
         }
-     }} onMouseOut={() => {
+     }} 
+     onMouseLeave={() => {
       setHoverSessions(false);
       setScrollSessions(0);
     }}

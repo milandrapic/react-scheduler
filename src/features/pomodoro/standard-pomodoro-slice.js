@@ -67,14 +67,14 @@ export const standardPomoSlice = createSlice({
         },
         newTimerReset: (state) => {
             // add current values to session history
-            if(state.timerType == 0 || state.timerType == 3){
-                
-                state.sessions = [...state.sessions,{
+            if((state.timerType == 0 || state.timerType == 3) && state.timeElapsed > 0){
+                // add to the beginning of the list
+                state.sessions = [{
                     sid: state.numberOfWorkSessions,
                     timeWorked: state.timeElapsed,
                     targetTimeWorked: (state.timerType == 0 ? state.workTime : state.currentCustomSession.workTime) * 60, // in seconds
                     topic: state.topic
-                }]
+                },...state.sessions]
                 state.numberOfWorkSessions += 1;
                 // console.log(state.sessions);
             }
